@@ -1,0 +1,18 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test
+  labels:
+    wayne-app: test
+    wayne-ns: ns1
+    app: test
+spec:
+  rules:
+  - host: ingress1.api.ns1.yn.cn
+    http:
+      paths:
+      - backend:
+          serviceName: test
+          servicePort: 80
+        path: "/"

@@ -1,0 +1,15 @@
+---
+template: ''
+service:
+  id: ''
+  name: ''
+  metaData: ''
+  app:
+    id: ''
+    namespace: 
+  order: 0
+  user: lixingxing
+user: lixingxing
+serviceId: 23
+description: rabot
+name: ''

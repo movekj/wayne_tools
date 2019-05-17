@@ -1,0 +1,13 @@
+---
+namespace:
+  metaDataObj:
+    imagePullSecrets: []
+    env: []
+    clusterMeta: {}
+    ingressAnnotations: {}
+    serviceAnnotations: {}
+  id: ''
+metaDataObj: {}
+name: ''
+metaData:
+  system.api-name-generate-rule: none

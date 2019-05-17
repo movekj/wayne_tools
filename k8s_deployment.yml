@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: PLACEHOLDER
+  labels:
+    wayne-app: PLACEHOLDER
+    wayne-ns: PLACEHOLDER
+    app: PLACEHOLDER
+spec:
+  selector:
+    matchLabels:
+      app: PLACEHOLDER
+  template:
+    metadata:
+      labels:
+        wayne-app: PLACEHOLDER
+        wayne-ns: PLACEHOLDER
+        app: PLACEHOLDER
+    spec:
+      containers:
+        - resources:
+            limits:
+              memory: 0.5Gi
+              cpu: '0.5'
+            requests:
+              memory: 0.025Gi
+              cpu: '0.025'
+          env: []
+          envFrom: []
+          imagePullPolicy: IfNotPresent
+          image: PLACEHOLDER
+          name: PLACEHOLDER
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 1
+  

@@ -1,0 +1,12 @@
+---
+metaData:
+  replicas:
+    yunniao-xmz-cluster1: 2
+  resources:
+    cpuLimit: '12'
+    cpuRequestLimitPercent: 50%
+    memoryLimit: '64'
+    memoryRequestLimitPercent: 100%
+    replicaLimit: '32'
+name: ''
+appId: ''

@@ -1,0 +1,25 @@
+---
+metaDataObj:
+  imagePullSecrets: []
+  env: []
+  clusterMeta:
+    yunniao-xmz-cluster1:
+      resourcesLimit:
+        cpu: 
+        memory: 
+  ingressAnnotations: {}
+  namespace: ''
+  serviceAnnotations: {}
+name: test
+kubeNamespace: {}
+metaData:
+  imagePullSecrets: []
+  env: []
+  clusterMeta:
+    yunniao-xmz-cluster1:
+      resourcesLimit:
+        cpu: 
+        memory: 
+  ingressAnnotations: {}
+  namespace: 
+  serviceAnnotations: {}

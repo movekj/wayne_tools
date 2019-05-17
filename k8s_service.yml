@@ -1,0 +1,16 @@
+---
+metadata:
+  labels:
+    app: ''
+    wayne-ns: ''
+    wayne-app: ''
+  name: ''
+spec:
+  type: ClusterIP
+  ports:
+  - targetPort: 8800
+    protocol: TCP
+    port: 80
+    name: ''
+  selector:
+    app: ''
