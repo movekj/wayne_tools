@@ -6,7 +6,7 @@ import argparse
 from termcolor import colored
 
 class WayneApi:
-    def __init__(self, namespace, app_name, project_name, image, debug=False):
+    def __init__(self, namespace, app_name, project_name, k8s_cluser_name, image, debug=False):
         self.app_name = app_name
         self.namespace = namespace
         self.project_name = project_name
@@ -14,15 +14,18 @@ class WayneApi:
         self.service_name = project_name
         self.ingress_name = project_name
         self.debug = debug
-        self.wayne_url = 'http://wayne-offline.xunhuji.me'
+        self.username = os.environ['WAYNE_USERNAME'] 
+        self.password = os.environ['WAYNE_PASSWORD']
+        self.wayne_url = os.environ['WAYNE_URL']
+        self.k8s_cluser_name = k8s_cluser_name
+
         self.token_file = '%s/.wayne_token' % os.environ['HOME']
         self.namespace_id = self.get_namespace_id_by_name(self.namespace)
         self.app_id = self.get_app_id_by_name(self.namespace_id, self.app_name)
         self.project_id = self.get_project_id_id_by_name(self.namespace, self.app_id, self.project_name)
 
-
     def login(self):
-        resp = requests.get('%s/login/ldap?username=lixingxing&password=wo9624926'  % self.wayne_url)
+        resp = requests.get('%s/login/ldap?username=%s&password=%s'  % (self.wayne_url, self.username, self.password))
         token =  resp.json()['data']['token']
         with open(self.token_file, 'w') as f:
             f.write(token)
@@ -84,7 +87,7 @@ class WayneApi:
         print resp.json()
         data = resp.json()['data']
         self.request_wayne(
-            '/api/v1/kubernetes/namespaces/%s/clusters/yunniao-xmz-cluster1' % self.namespace,
+            '/api/v1/kubernetes/namespaces/%s/clusters/%s' % (self.namespace, self.k8s_cluser_name),
             'post',
             {}
         )
@@ -239,7 +242,7 @@ class WayneApi:
         template['metadata']['namespace'] = self.namespace 
         payload = template
         resp = self.request_wayne(
-            '/api/v1/kubernetes/apps/%s/deployments/%s/tpls/%s/clusters/yunniao-xmz-cluster1' % (self.app_id, self.project_id, deployment_tpl_id),
+            '/api/v1/kubernetes/apps/%s/deployments/%s/tpls/%s/clusters/%s' % (self.app_id, self.project_id, deployment_tpl_id, self.k8s_cluser_name),
             'post',
             payload
         )
@@ -258,7 +261,7 @@ class WayneApi:
         template['spec']['ports'][0]['name'] = self.service_name + '-80' 
         payload['template'] = json.dumps(template)
         payload['serviceId'] = self.service_id
-        payload['service']['metaData'] = json.dumps({"clusters": ["yunniao-xmz-cluster1"]})
+        payload['service']['metaData'] = json.dumps({"clusters": [self.k8s_cluser_name]})
         payload['service']['id'] = self.service_id
         payload['service']['name'] = self.service_name
         payload['service']['app']['id'] = self.app_id
@@ -272,7 +275,7 @@ class WayneApi:
         service_tpl_id = data['id']
         template['metadata']['namespace'] = self.namespace
         resp = self.request_wayne(
-            '/api/v1/kubernetes/apps/%s/services/%s/tpls/%s/clusters/yunniao-xmz-cluster1' % (self.app_id, self.service_id, service_tpl_id),
+            '/api/v1/kubernetes/apps/%s/services/%s/tpls/%s/clusters/%s' % (self.app_id, self.service_id, service_tpl_id, self.k8s_cluser_name),
             'post',
             template
         )
@@ -307,7 +310,7 @@ class WayneApi:
         ingress_tpl_id = data['id']
         template['metadata']['namespace'] = namespace
         resp = self.request_wayne(
-            '/api/v1/kubernetes/apps/%s/ingresses/%s/tpls/%s/clusters/yunniao-xmz-cluster1' % (self.app_id, self.ingress_id, ingress_tpl_id),
+            '/api/v1/kubernetes/apps/%s/ingresses/%s/tpls/%s/clusters/%s' % (self.app_id, self.ingress_id, ingress_tpl_id, self.k8s_cluser_name),
             'post',
             template
         )
@@ -330,13 +333,15 @@ if __name__ == "__main__":
     parser.add_argument('--app_name', help='wayne project name')
     parser.add_argument('--project_name', help='wayne deployment name')
     parser.add_argument('--image', help='docker image')
+    parser.add_argument('--k8s_cluser_name', help='k8s cluster name in wayne')
     args  = parser.parse_args()
     namespace = args.namespace.replace ('_', '-')
     app_name = args.app_name.replace ('_', '-')
     project_name = args.project_name.replace ('_', '-')
+    k8s_cluser_name = args.k8s_cluser_name
     image = args.image
     debug = args.debug
-    wanye_api = WayneApi(namespace, app_name, project_name, image, debug)
+    wanye_api = WayneApi(namespace, app_name, project_name, k8s_cluser_name, image, debug)
     wanye_api.publish_deployment()
     wanye_api.publish_service()
     wanye_api.publish_ingress()
